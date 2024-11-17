@@ -26,12 +26,12 @@ class fastSamRealTime():
             if torch.backends.mps.is_available()
             else "cpu"
         )
-        print(f"\n Used device for {self.__class__.__name__} = {self.device}")
+        print(f"\n Used device for {self.__class__.__name__} is {self.device}")
 
     def wrapper_fastsam_prompt(self, frame, everything_results) -> np.ndarray:
+        """Segment the image based on user request."""
         # TODO: This function only handles everything and textprompts.
         # TODO cont'd:  should be able to handle box and point prompts aswell.
-        """Segment the image based on user request."""
         prompt_process = FastSAMPrompt(
             frame, everything_results, device=self.device
         )
