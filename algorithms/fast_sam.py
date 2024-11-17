@@ -1,7 +1,7 @@
-from fastsam import FastSAM, FastSAMPrompt
 import torch
 import numpy as np
 
+from fastsam import FastSAM, FastSAMPrompt
 
 # Two models are available now : FastSAM-s.pt and FastSAM-x.pt
 # FastSAM-s is faster but less accurate
@@ -45,8 +45,8 @@ class fastSamRealTime():
 def main():
     model_size = "large"
     object_to_track = "airplanes"
-    model = fastSamRealTime(model_size, object_to_track)
-    print(f"used device is {model.device}")
+    real_time_sam = fastSamRealTime(model_size, object_to_track)
+    print(f"used device is {real_time_sam.device}")
 
 
 if __name__ == "__main__":
