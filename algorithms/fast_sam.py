@@ -2,6 +2,7 @@ import torch
 import numpy as np
 
 from fastsam import FastSAM, FastSAMPrompt
+from typing import Union, List, Tuple
 
 # Two models are available now : FastSAM-s.pt and FastSAM-x.pt
 # FastSAM-s is faster but less accurate
@@ -12,13 +13,12 @@ fast_sam_model = {
 
 
 class fastSamRealTime():
-    def __init__(self, model_size: str, object_to_track: str = None) -> None:
+    def __init__(self, model_size: str) -> None:
         if model_size not in fast_sam_model.keys():
             print(f"Entered model size {model_size} could not be found")
             print("Small model size is assigned instead!")
             model_size = "small"
         self.model = FastSAM(fast_sam_model[model_size])
-        self.object_to_track = object_to_track
         self.device = torch.device(
             "cuda"
             if torch.cuda.is_available()
@@ -28,17 +28,21 @@ class fastSamRealTime():
         )
         print(f"\n Used device for {self.__class__.__name__} is {self.device}")
 
-    def wrapper_fastsam_prompt(self, frame, everything_results) -> np.ndarray:
+    def wrapper_fastsam_prompt(self, frame, everything_results, prompt_input: Union[str, List[Tuple[int, int]]], prompt_type: str = "everything") -> np.ndarray:
         """Segment the image based on user request."""
         # TODO: This function only handles everything and textprompts.
         # TODO cont'd:  should be able to handle box and point prompts aswell.
         prompt_process = FastSAMPrompt(
             frame, everything_results, device=self.device
         )
-        if self.object_to_track is None:
+        if prompt_type == "everything":
             ann = prompt_process.everything_prompt()
+        elif prompt_type == "text":
+            ann = prompt_process.text_prompt(prompt_input)
+        elif prompt_type == "box":
+            ann = prompt_process.box_prompt(bboxes=prompt_input)
         else:
-            ann = prompt_process.text_prompt(self.object_to_track)
+            raise ValueError(f"INVALID PROMPT TYPE {prompt_type}")
         return prompt_process.plot_to_result(frame, annotations=ann)
 
 
