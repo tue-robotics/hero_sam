@@ -42,7 +42,7 @@ char* BlobFromImage(cv::Mat& iImg, T& iBlob) {
 }
 
 
-char* YOLO_V8::PreProcess(cv::Mat& iImg, std::vector<int> iImgSize, cv::Mat& oImg)
+char* YOLO_V8::PreProcess(const cv::Mat& iImg, std::vector<int> iImgSize, cv::Mat& oImg)
 {
     if (iImg.channels() == 3)
     {
@@ -167,7 +167,7 @@ const char* YOLO_V8::CreateSession(DL_INIT_PARAM& iParams) {
 }
 
 
-const char* YOLO_V8::RunSession(cv::Mat& iImg, std::vector<DL_RESULT>& oResult) {
+const char* YOLO_V8::RunSession(const cv::Mat& iImg, std::vector<DL_RESULT>& oResult) {
 #ifdef benchmark
     clock_t starttime_1 = clock();
 #endif // benchmark
@@ -197,7 +197,7 @@ const char* YOLO_V8::RunSession(cv::Mat& iImg, std::vector<DL_RESULT>& oResult) 
 
 
 template<typename N>
-char* YOLO_V8::TensorProcess(clock_t& starttime_1, cv::Mat& iImg, N& blob, std::vector<int64_t>& inputNodeDims,
+char* YOLO_V8::TensorProcess(clock_t& starttime_1, const cv::Mat& iImg, N& blob, std::vector<int64_t>& inputNodeDims,
     std::vector<DL_RESULT>& oResult) {
     Ort::Value inputTensor = Ort::Value::CreateTensor<typename std::remove_pointer<N>::type>(
         Ort::MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeCPU), blob, 3 * imgSize.at(0) * imgSize.at(1),
@@ -324,7 +324,9 @@ char* YOLO_V8::TensorProcess(clock_t& starttime_1, cv::Mat& iImg, N& blob, std::
         break;
     }
     default:
-        std::cout << "[YOLO_V8]: " << "Not support model type." << std::endl;
+
+        throw std::runtime_error("Unsupported model type");
+        //std::cout << "[YOLO_V8]: " << "Not support model type." << std::endl;
     }
     return RET_OK;
 
