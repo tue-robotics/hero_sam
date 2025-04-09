@@ -18,6 +18,10 @@ set(ONNXRUNTIME_VERSION 1.21.0)
 set(ONNXRUNTIME_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/onnxruntime-linux-x64-${ONNXRUNTIME_VERSION}")
 include_directories(${ONNXRUNTIME_ROOT}/include)
 
+# -------------- Cuda ------------------#
+#add_definitions(-DUSE_CUDA=1)
+#include_directories(/usr/local/cuda/include)
+
 set(PROJECT_SOURCES
         main.cpp
         inference.h
@@ -48,3 +52,6 @@ configure_file(yolo11m.onnx ${CMAKE_CURRENT_BINARY_DIR}/yolo11m.onnx COPYONLY)
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/images
 )
+
+
+
