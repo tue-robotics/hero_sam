@@ -33,7 +33,7 @@ void Detector(YOLO_V8*& p, const cv::Mat& img) {
             cv::Scalar(0, 0, 0),
             2
         );
-
+        ROS_INFO("Detected: %s with confidence: %.2f", label.c_str(), confidence);
 
             }
 
@@ -77,7 +77,8 @@ void Classifier(const cv::Mat& img)
 
 int ReadCocoYaml(YOLO_V8*& p) {
     // Open the YAML file
-    std::ifstream file("coco.yaml");
+    // std::ifstream file("coco.yaml");
+    std::ifstream file("/home/amigo/ros/noetic/system/devel/lib/ed_sensor_integration/coco.yaml");
     if (!file.is_open())
     {
         std::cerr << "Failed to open file" << std::endl;

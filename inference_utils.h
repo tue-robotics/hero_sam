@@ -8,7 +8,7 @@
 #include <filesystem>
 #include <fstream>
 #include <random>
-
+#include <ros/ros.h>
 // Declare the functions from main.cpp
 void Detector(YOLO_V8*& p, const cv::Mat& img);
 void Classifier(cv::Mat& img);
