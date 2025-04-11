@@ -14,3 +14,4 @@ void Detector(YOLO_V8*& p, const cv::Mat& img);
 void Classifier(cv::Mat& img);
 int ReadCocoYaml(YOLO_V8*& p);
 void DetectTest(cv::Mat& img);
+void ClassificationInference(const cv::Mat& img);

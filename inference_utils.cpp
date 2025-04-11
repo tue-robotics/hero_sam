@@ -153,7 +153,34 @@ void DetectTest(cv::Mat& img)
     Detector(yoloDetector, img);
 }
 
+void ClassificationInference(const cv::Mat& img)
+{
+    // run classification
+    YOLO_V8* yoloDetector = new YOLO_V8;
+    ReadCocoYaml(yoloDetector);
+    DL_INIT_PARAM params;
+    params.rectConfidenceThreshold = 0.1;
+    params.iouThreshold = 0.5;
+    params.modelPath = "/home/amigo/ros/noetic/system/devel/lib/ed_sensor_integration/yolo11m.onnx";
+    params.imgSize = { 640, 640 };
+    #ifdef USE_CUDA
+        params.cudaEnable = true;
 
+        // GPU FP32 inference
+        params.modelType = YOLO_DETECT_V8;
+        // GPU FP16 inference
+        //Note: change fp16 onnx model
+        //params.modelType = YOLO_DETECT_V8_HALF;
+
+    #else
+        // CPU inference
+        params.modelType = YOLO_DETECT_V8;
+        params.cudaEnable = false;
+
+    #endif
+        yoloDetector->CreateSession(params);
+        Detector(yoloDetector, img);
+}
 /*
 void ClsTest()
 {
