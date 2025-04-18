@@ -15,7 +15,7 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 # -------------- ONNXRuntime  ------------------#
 set(ONNXRUNTIME_VERSION 1.21.0)
-set(ONNXRUNTIME_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/onnxruntime-linux-x64-${ONNXRUNTIME_VERSION}")
+set(ONNXRUNTIME_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../onnxruntime-linux-x64-${ONNXRUNTIME_VERSION}")
 include_directories(${ONNXRUNTIME_ROOT}/include)
 
 # -------------- Cuda ------------------#
@@ -52,6 +52,3 @@ configure_file(yolo11m.onnx ${CMAKE_CURRENT_BINARY_DIR}/yolo11m.onnx COPYONLY)
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/images
 )
-
-
-
