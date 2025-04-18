@@ -1,0 +1,3 @@
+/home/amigo/Documents/repos/hero_sam/sam_inference/build/CMakeFiles/edit_cache.dir
+/home/amigo/Documents/repos/hero_sam/sam_inference/build/CMakeFiles/rebuild_cache.dir
+/home/amigo/Documents/repos/hero_sam/sam_inference/build/CMakeFiles/Yolov8OnnxRuntimeCPPInference.dir
