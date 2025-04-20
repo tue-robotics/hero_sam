@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /home/amigo/Documents/repos/hero_sam/sam_inference/build
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -77,6 +66,17 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named Yolov8OnnxRuntimeCPPInference
+# Target rules for targets named SAMOnnxRuntimeCPPInference
 
 # Build rule for target.
-Yolov8OnnxRuntimeCPPInference: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 Yolov8OnnxRuntimeCPPInference
-.PHONY : Yolov8OnnxRuntimeCPPInference
+SAMOnnxRuntimeCPPInference: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 SAMOnnxRuntimeCPPInference
+.PHONY : SAMOnnxRuntimeCPPInference
 
 # fast build rule for target.
-Yolov8OnnxRuntimeCPPInference/fast:
-	$(MAKE) -f CMakeFiles/Yolov8OnnxRuntimeCPPInference.dir/build.make CMakeFiles/Yolov8OnnxRuntimeCPPInference.dir/build
-.PHONY : Yolov8OnnxRuntimeCPPInference/fast
+SAMOnnxRuntimeCPPInference/fast:
+	$(MAKE) -f CMakeFiles/SAMOnnxRuntimeCPPInference.dir/build.make CMakeFiles/SAMOnnxRuntimeCPPInference.dir/build
+.PHONY : SAMOnnxRuntimeCPPInference/fast
 
 src/inference.o: src/inference.cpp.o
 
@@ -129,7 +129,7 @@ src/inference.o: src/inference.cpp.o
 
 # target to build an object file
 src/inference.cpp.o:
-	$(MAKE) -f CMakeFiles/Yolov8OnnxRuntimeCPPInference.dir/build.make CMakeFiles/Yolov8OnnxRuntimeCPPInference.dir/src/inference.cpp.o
+	$(MAKE) -f CMakeFiles/SAMOnnxRuntimeCPPInference.dir/build.make CMakeFiles/SAMOnnxRuntimeCPPInference.dir/src/inference.cpp.o
 .PHONY : src/inference.cpp.o
 
 src/inference.i: src/inference.cpp.i
@@ -138,7 +138,7 @@ src/inference.i: src/inference.cpp.i
 
 # target to preprocess a source file
 src/inference.cpp.i:
-	$(MAKE) -f CMakeFiles/Yolov8OnnxRuntimeCPPInference.dir/build.make CMakeFiles/Yolov8OnnxRuntimeCPPInference.dir/src/inference.cpp.i
+	$(MAKE) -f CMakeFiles/SAMOnnxRuntimeCPPInference.dir/build.make CMakeFiles/SAMOnnxRuntimeCPPInference.dir/src/inference.cpp.i
 .PHONY : src/inference.cpp.i
 
 src/inference.s: src/inference.cpp.s
@@ -147,7 +147,7 @@ src/inference.s: src/inference.cpp.s
 
 # target to generate assembly for a file
 src/inference.cpp.s:
-	$(MAKE) -f CMakeFiles/Yolov8OnnxRuntimeCPPInference.dir/build.make CMakeFiles/Yolov8OnnxRuntimeCPPInference.dir/src/inference.cpp.s
+	$(MAKE) -f CMakeFiles/SAMOnnxRuntimeCPPInference.dir/build.make CMakeFiles/SAMOnnxRuntimeCPPInference.dir/src/inference.cpp.s
 .PHONY : src/inference.cpp.s
 
 src/main.o: src/main.cpp.o
@@ -156,7 +156,7 @@ src/main.o: src/main.cpp.o
 
 # target to build an object file
 src/main.cpp.o:
-	$(MAKE) -f CMakeFiles/Yolov8OnnxRuntimeCPPInference.dir/build.make CMakeFiles/Yolov8OnnxRuntimeCPPInference.dir/src/main.cpp.o
+	$(MAKE) -f CMakeFiles/SAMOnnxRuntimeCPPInference.dir/build.make CMakeFiles/SAMOnnxRuntimeCPPInference.dir/src/main.cpp.o
 .PHONY : src/main.cpp.o
 
 src/main.i: src/main.cpp.i
@@ -165,7 +165,7 @@ src/main.i: src/main.cpp.i
 
 # target to preprocess a source file
 src/main.cpp.i:
-	$(MAKE) -f CMakeFiles/Yolov8OnnxRuntimeCPPInference.dir/build.make CMakeFiles/Yolov8OnnxRuntimeCPPInference.dir/src/main.cpp.i
+	$(MAKE) -f CMakeFiles/SAMOnnxRuntimeCPPInference.dir/build.make CMakeFiles/SAMOnnxRuntimeCPPInference.dir/src/main.cpp.i
 .PHONY : src/main.cpp.i
 
 src/main.s: src/main.cpp.s
@@ -174,7 +174,7 @@ src/main.s: src/main.cpp.s
 
 # target to generate assembly for a file
 src/main.cpp.s:
-	$(MAKE) -f CMakeFiles/Yolov8OnnxRuntimeCPPInference.dir/build.make CMakeFiles/Yolov8OnnxRuntimeCPPInference.dir/src/main.cpp.s
+	$(MAKE) -f CMakeFiles/SAMOnnxRuntimeCPPInference.dir/build.make CMakeFiles/SAMOnnxRuntimeCPPInference.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
 # Help Target
@@ -183,9 +183,9 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... Yolov8OnnxRuntimeCPPInference"
+	@echo "... edit_cache"
+	@echo "... SAMOnnxRuntimeCPPInference"
 	@echo "... src/inference.o"
 	@echo "... src/inference.i"
 	@echo "... src/inference.s"

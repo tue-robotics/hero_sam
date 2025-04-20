@@ -88,6 +88,12 @@ onnxruntime_cxx_api.h
 cuda_fp16.h
 -
 
+/home/amigo/Documents/repos/hero_sam/sam_inference/src/inference.cpp
+inference.h
+/home/amigo/Documents/repos/hero_sam/sam_inference/src/inference.h
+regex
+-
+
 /home/amigo/Documents/repos/hero_sam/sam_inference/src/main.cpp
 inference.h
 /home/amigo/Documents/repos/hero_sam/sam_inference/src/inference.h

@@ -4,8 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/amigo/Documents/repos/hero_sam/sam_inference/src/inference.cpp" "/home/amigo/Documents/repos/hero_sam/sam_inference/build/CMakeFiles/Yolov8OnnxRuntimeCPPInference.dir/src/inference.cpp.o"
-  "/home/amigo/Documents/repos/hero_sam/sam_inference/src/main.cpp" "/home/amigo/Documents/repos/hero_sam/sam_inference/build/CMakeFiles/Yolov8OnnxRuntimeCPPInference.dir/src/main.cpp.o"
+  "/home/amigo/Documents/repos/hero_sam/sam_inference/src/inference.cpp" "/home/amigo/Documents/repos/hero_sam/sam_inference/build/CMakeFiles/SAMOnnxRuntimeCPPInference.dir/src/inference.cpp.o"
+  "/home/amigo/Documents/repos/hero_sam/sam_inference/src/main.cpp" "/home/amigo/Documents/repos/hero_sam/sam_inference/build/CMakeFiles/SAMOnnxRuntimeCPPInference.dir/src/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

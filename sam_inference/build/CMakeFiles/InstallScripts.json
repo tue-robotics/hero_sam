@@ -1,7 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"/home/amigo/Documents/repos/hero_sam/SPEED-SAM-C-TENSORRT/build/cmake_install.cmake"
-	],
-	"Parallel" : false
-}
