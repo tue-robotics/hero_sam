@@ -94,12 +94,6 @@ inference.h
 regex
 -
 
-/home/amigo/Documents/repos/hero_sam/sam_inference/src/main.cpp
-inference.h
-/home/amigo/Documents/repos/hero_sam/sam_inference/src/inference.h
-regex
--
-
 /usr/include/opencv4/opencv2/calib3d.hpp
 opencv2/core.hpp
 /usr/include/opencv4/opencv2/opencv2/core.hpp
