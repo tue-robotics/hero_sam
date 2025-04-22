@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug SAM Model",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/sam_inference/build/SAMOnnxRuntimeCPPInference", // Path to the executable
+            "args": [], // Add any command-line arguments for your program here
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}", // Set the working directory
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "build" // Ensure the project is built before debugging
+        }
+    ]
+}
