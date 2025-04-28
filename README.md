@@ -29,6 +29,8 @@ Note (2): Due to ONNX Runtime, we need to use CUDA 12(.8) and cuDNN 9. Keep in m
 
 ## Build 🛠️
 
+0. You can just use run install ```console ./install.sh```. For manual installation.
+
 1. Clone the repository to your local machine.
 
 2. Navigate to the root directory of the repository.
