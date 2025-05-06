@@ -1,11 +1,12 @@
 #include <iostream>
 #include <iomanip>
 #include "yolo_inference.h"
+#include "sam_inference.h"
 #include <filesystem>
 #include <fstream>
 #include <random>
 
-void Detector(YOLO_V8*& p) {
+void Detector(YOLO_V8*& p, std::vector<DL_RESULT>& res) {
     std::filesystem::path current_path = std::filesystem::current_path();
     std::filesystem::path imgs_path = current_path / "images";
     for (auto& i : std::filesystem::directory_iterator(imgs_path))
@@ -14,7 +15,7 @@ void Detector(YOLO_V8*& p) {
         {
             std::string img_path = i.path().string();
             cv::Mat img = cv::imread(img_path);
-            std::vector<DL_RESULT> res;
+            ;
             p->RunSession(img, res);
 
             for (auto& re : res)
@@ -170,8 +171,32 @@ void DetectTest()
     params.cudaEnable = false;
 
 #endif
-    yoloDetector->CreateSession(params);
+    std::vector<DL_RESULT> res;
+    yoloDetector->CreateSession(params, res);
     Detector(yoloDetector);
+
+////////////////////////// SAM //////////////////////////////////////
+
+    SAM* samSegmentor = new SAM;
+        DL_INIT_PARAM_SAM params1;
+        DL_INIT_PARAM_SAM params2;
+
+        params1.rectConfidenceThreshold = 0.1;
+        params1.iouThreshold = 0.5;
+        params1.modelPath = "/home/amigo/Documents/repos/hero_sam/sam_inference/model/SAM_encoder.onnx";
+        params1.imgSize = { 1024, 1024 };
+        params1.box = res.box;
+
+        params2 = params1;
+        params2.modelType = SAM_SEGMENT_DECODER;
+        params2.modelPath = "/home/amigo/Documents/repos/hero_sam/sam_inference/model/SAM_mask_decoder.onnx";
+
+
+        #ifdef USE_CUDA
+        params1.cudaEnable = true;
+        #else
+        params1.cudaEnable = false;
+        #endif
 }
 
 
@@ -188,6 +213,10 @@ void ClsTest()
 
 int main()
 {
+    YOLO_V8* yoloDetector = new YOLO_V8;
+    std::string model_path = "cls.onnx";
+    ReadCocoYaml(yoloDetector);
+    DL_INIT_PARAM params{ model_path, YOLO_CLS, {224, 224} };
     DetectTest();
     //ClsTest();
 }

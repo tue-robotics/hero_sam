@@ -2,30 +2,77 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "configure",
-            "type": "shell",
-            "command": "cmake",
-            "args": [
-                "-DCMAKE_BUILD_TYPE=Debug", // Set the build type to Debug
-                "-S", "./sam_inference",                 // Source directory
-                "-B", "./sam_inference/build"              // Build directory
-            ],
+            "label": "build",
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "select-build-target"
+            ],
             "problemMatcher": []
         },
         {
-            "label": "build",
+            "label": "select-build-target",
             "type": "shell",
-            "command": "cmake --build sam_inference/build",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
+            "command": "${input:buildChoice}",
+            "problemMatcher": []
+        },
+        {
+            "label": "configure-sam",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "-S", "${workspaceFolder}/sam_inference",
+                "-B", "${workspaceFolder}/sam_inference/build"
+            ],
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "configure-pipeline",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "-S", "${workspaceFolder}/pipeline",
+                "-B", "${workspaceFolder}/pipeline/build"
+            ],
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "build-sam",
+            "type": "shell",
+            "command": "cmake",
+            "args": ["--build", "sam_inference/build"],
+            "dependsOn": ["configure-sam"],
             "problemMatcher": ["$gcc"],
-            "detail": "Build the project using CMake with Debug symbols"
+            "detail": "Build the SAM project using CMake with Debug symbols"
+        },
+        {
+            "label": "build-pipeline",
+            "type": "shell",
+            "command": "cmake",
+            "args": ["--build", "pipeline/build"],
+            "dependsOn": ["configure-pipeline"],
+            "problemMatcher": ["$gcc"],
+            "detail": "Build the Pipeline project using CMake with Debug symbols"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "buildChoice",
+            "type": "command",
+            "command": "workbench.action.tasks.runTask",
+            "args": "${input:buildTarget}"
+        },
+        {
+            "id": "buildTarget",
+            "type": "pickString",
+            "description": "Which project do you want to build?",
+            "options": ["build-sam", "build-pipeline"],
+            "default": "build-pipeline"
         }
     ]
 }
