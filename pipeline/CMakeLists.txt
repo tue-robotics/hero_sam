@@ -36,6 +36,7 @@ set(PROJECT_SOURCES
     # Include YOLO files if needed for linking
     ${CMAKE_CURRENT_SOURCE_DIR}/../yolo_inference/src/yolo_inference.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../sam_inference/src/sam_inference.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../sam_inference/src/utils.cpp
 )
 
 # Add executable

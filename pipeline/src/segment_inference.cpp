@@ -6,13 +6,9 @@
 #include <fstream>
 #include <random>
 
-void Detector(YOLO_V8*& p, std::vector<DL_RESULT>& res) {
-    std::filesystem::path current_path = std::filesystem::current_path();
-    std::filesystem::path imgs_path = current_path / "images";
-    for (auto& i : std::filesystem::directory_iterator(imgs_path))
-    {
-        if (i.path().extension() == ".jpg" || i.path().extension() == ".png" || i.path().extension() == ".jpeg")
-        {
+void Detector(YOLO_V8*& p, std::vector<DL_RESULT>& res, auto& i) {
+
+
             std::string img_path = i.path().string();
             cv::Mat img = cv::imread(img_path);
             ;
@@ -54,24 +50,23 @@ void Detector(YOLO_V8*& p, std::vector<DL_RESULT>& res) {
             cv::imshow("Result of Detection", img);
             cv::waitKey(0);
             cv::destroyAllWindows();
-        }
-    }
+
 }
 
 
-void Classifier(YOLO_V8*& p)
+void Classifier(YOLO_V8*& p, auto& i)
 {
     std::filesystem::path current_path = std::filesystem::current_path();
     std::filesystem::path imgs_path = current_path;// / "images"
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dis(0, 255);
-    for (auto& i : std::filesystem::directory_iterator(imgs_path))
-    {
-        if (i.path().extension() == ".jpg" || i.path().extension() == ".png")
-        {
+    //for (auto& i : std::filesystem::directory_iterator(imgs_path))
+    //{
+        //if (i.path().extension() == ".jpg" || i.path().extension() == ".png")
+        //{
             std::string img_path = i.path().string();
-            //std::cout << img_path << std::endl;
+            std::cout << img_path << std::endl;
             cv::Mat img = cv::imread(img_path);
             std::vector<DL_RESULT> res;
             const char* ret = p->RunSession(img, res);
@@ -91,9 +86,9 @@ void Classifier(YOLO_V8*& p)
             cv::waitKey(0);
             cv::destroyAllWindows();
             //cv::imwrite("E:\\output\\" + std::to_string(k) + ".png", img);
-        }
+        //}
 
-    }
+    //}
 }
 
 
@@ -149,6 +144,8 @@ int ReadCocoYaml(YOLO_V8*& p) {
 
 void DetectTest()
 {
+
+    ////////////////////////// YOLO //////////////////////////////////////
     YOLO_V8* yoloDetector = new YOLO_V8;
     ReadCocoYaml(yoloDetector);
     DL_INIT_PARAM params;
@@ -171,32 +168,76 @@ void DetectTest()
     params.cudaEnable = false;
 
 #endif
-    std::vector<DL_RESULT> res;
-    yoloDetector->CreateSession(params, res);
-    Detector(yoloDetector);
 
-////////////////////////// SAM //////////////////////////////////////
+    yoloDetector->CreateSession(params);
+    ////////////////////////// SAM //////////////////////////////////////
+    SAM* samSegmentorEncoder = new SAM;
+    SAM* samSegmentorDecoder = new SAM;
+    SEG::DL_INIT_PARAM params1;
+    SEG::DL_INIT_PARAM params2;
 
-    SAM* samSegmentor = new SAM;
-        DL_INIT_PARAM_SAM params1;
-        DL_INIT_PARAM_SAM params2;
-
-        params1.rectConfidenceThreshold = 0.1;
-        params1.iouThreshold = 0.5;
-        params1.modelPath = "/home/amigo/Documents/repos/hero_sam/sam_inference/model/SAM_encoder.onnx";
-        params1.imgSize = { 1024, 1024 };
-        params1.box = res.box;
-
-        params2 = params1;
-        params2.modelType = SAM_SEGMENT_DECODER;
-        params2.modelPath = "/home/amigo/Documents/repos/hero_sam/sam_inference/model/SAM_mask_decoder.onnx";
+    params1.rectConfidenceThreshold = 0.1;
+    params1.iouThreshold = 0.5;
+    params1.modelPath = "/home/amigo/Documents/repos/hero_sam/sam_inference/model/SAM_encoder.onnx";
+    params1.imgSize = { 1024, 1024 };
 
 
-        #ifdef USE_CUDA
-        params1.cudaEnable = true;
-        #else
-        params1.cudaEnable = false;
-        #endif
+#ifdef USE_CUDA
+    params1.cudaEnable = true;
+#else
+    params1.cudaEnable = false;
+#endif
+    samSegmentorEncoder->CreateSession(params1);
+    params2 = params1;
+    params2.modelType = SEG::SAM_SEGMENT_DECODER;
+    params2.modelPath = "/home/amigo/Documents/repos/hero_sam/sam_inference/model/SAM_mask_decoder.onnx";
+    samSegmentorDecoder->CreateSession(params2);
+
+    std::filesystem::path current_path = std::filesystem::current_path();
+    std::filesystem::path imgs_path = current_path / "images";
+    for (auto& i : std::filesystem::directory_iterator(imgs_path))
+    {
+        if (i.path().extension() == ".jpg" || i.path().extension() == ".png")
+        {
+            ////////////////////////// YOLO //////////////////////////////////////
+            std::vector<DL_RESULT> resYolo;
+            Detector(yoloDetector, resYolo, i);
+
+            ////////////////////////// SAM //////////////////////////////////////
+            std::vector<SEG::DL_RESULT> resSam;
+            SEG::MODEL_TYPE modelTypeRef = params1.modelType;
+            std::string img_path = i.path().string();
+            cv::Mat img = cv::imread(img_path);
+            samSegmentorEncoder->RunSession(img, resSam, modelTypeRef);
+
+            // Make sure we have at least one result
+            // Calculate SAM scaling factors
+            float samScaleX = 1024.0f / img.cols;
+            float samScaleY = 1024.0f / img.rows;
+
+
+
+            for (const auto& result : resYolo) {
+
+                // Scale YOLO boxes to SAM input dimensions
+                cv::Rect scaledBox;
+                // Apply scaling to convert from original image to SAM input space
+                scaledBox.x = int(result.box.x * samScaleX);
+                scaledBox.y = int(result.box.y * samScaleY);
+                scaledBox.width = int(result.box.width * samScaleX);
+                scaledBox.height = int(result.box.height * samScaleY);
+                resSam[0].boxes.push_back(scaledBox);
+            }
+
+            modelTypeRef = params2.modelType;
+            samSegmentorDecoder->RunSession(img, resSam, modelTypeRef);
+            std::cout << "Press any key to exit" << std::endl;
+            cv::imshow("Result of Detection", img);
+            cv::waitKey(0);
+            cv::destroyAllWindows();
+
+            }
+        }
 }
 
 
@@ -207,7 +248,7 @@ void ClsTest()
     ReadCocoYaml(yoloDetector);
     DL_INIT_PARAM params{ model_path, YOLO_CLS, {224, 224} };
     yoloDetector->CreateSession(params);
-    Classifier(yoloDetector);
+    //Classifier(yoloDetector);
 }
 
 
