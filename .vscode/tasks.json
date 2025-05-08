@@ -2,22 +2,25 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
+            "label": "build-sam-project",
             "dependsOrder": "sequence",
-            "dependsOn": [
-                "select-build-target"
-            ],
-            "problemMatcher": []
+            "dependsOn": ["configure-sam", "build-sam-binary"],
+            "problemMatcher": ["$gcc"],
+            "group": "build"
         },
         {
-            "label": "select-build-target",
-            "type": "shell",
-            "command": "${input:buildChoice}",
-            "problemMatcher": []
+            "label": "build-pipeline-project",
+            "dependsOrder": "sequence",
+            "dependsOn": ["configure-pipeline", "build-pipeline-binary"],
+            "problemMatcher": ["$gcc"],
+            "group": "build"
+        },
+        {
+            "label": "build-yolo-project",
+            "dependsOrder": "sequence",
+            "dependsOn": ["configure-yolo", "build-yolo-binary"],
+            "problemMatcher": ["$gcc"],
+            "group": "build"
         },
         {
             "label": "configure-sam",
@@ -42,37 +45,49 @@
             "problemMatcher": ["$gcc"]
         },
         {
-            "label": "build-sam",
+            "label": "configure-yolo",
             "type": "shell",
             "command": "cmake",
-            "args": ["--build", "sam_inference/build"],
-            "dependsOn": ["configure-sam"],
-            "problemMatcher": ["$gcc"],
-            "detail": "Build the SAM project using CMake with Debug symbols"
+            "args": [
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "-S", "${workspaceFolder}/yolo_inference",
+                "-B", "${workspaceFolder}/yolo_inference/build"
+            ],
+            "problemMatcher": ["$gcc"]
         },
         {
-            "label": "build-pipeline",
+            "label": "build-sam-binary",
             "type": "shell",
             "command": "cmake",
-            "args": ["--build", "pipeline/build"],
-            "dependsOn": ["configure-pipeline"],
-            "problemMatcher": ["$gcc"],
-            "detail": "Build the Pipeline project using CMake with Debug symbols"
-        }
-    ],
-    "inputs": [
-        {
-            "id": "buildChoice",
-            "type": "command",
-            "command": "workbench.action.tasks.runTask",
-            "args": "${input:buildTarget}"
+            "args": [
+                "--build",
+                "${workspaceFolder}/sam_inference/build",
+                "--config", "Debug"
+            ],
+            "problemMatcher": ["$gcc"]
         },
         {
-            "id": "buildTarget",
-            "type": "pickString",
-            "description": "Which project do you want to build?",
-            "options": ["build-sam", "build-pipeline"],
-            "default": "build-pipeline"
+            "label": "build-pipeline-binary",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "${workspaceFolder}/pipeline/build",
+                "--config", "Debug"
+            ],
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "build-yolo-binary",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "${workspaceFolder}/yolo_inference/build",
+                "--config", "Debug"
+            ],
+            "problemMatcher": ["$gcc"]
         }
+
     ]
 }
