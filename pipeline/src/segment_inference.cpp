@@ -195,6 +195,8 @@ void DetectTest()
 
     std::filesystem::path current_path = std::filesystem::current_path();
     std::filesystem::path imgs_path = current_path / "images";
+
+    std::vector<SEG::DL_RESULT> resSam;
     for (auto& i : std::filesystem::directory_iterator(imgs_path))
     {
         if (i.path().extension() == ".jpg" || i.path().extension() == ".png")
@@ -204,20 +206,20 @@ void DetectTest()
             Detector(yoloDetector, resYolo, i);
 
             ////////////////////////// SAM //////////////////////////////////////
-            std::vector<SEG::DL_RESULT> resSam;
+            SEG::DL_RESULT res;
             SEG::MODEL_TYPE modelTypeRef = params1.modelType;
             std::string img_path = i.path().string();
             cv::Mat img = cv::imread(img_path);
-            samSegmentorEncoder->RunSession(img, resSam, modelTypeRef);
+            samSegmentorEncoder->RunSession(img, resSam, modelTypeRef, res);
 
             // Make sure we have at least one result
 
             for (const auto& result : resYolo) {
-                resSam[0].boxes.push_back(result.box);
+                res.boxes.push_back(result.box);
             }
 
             modelTypeRef = params2.modelType;
-            samSegmentorDecoder->RunSession(img, resSam, modelTypeRef);
+            samSegmentorDecoder->RunSession(img, resSam, modelTypeRef, res);
             std::cout << "Press any key to exit" << std::endl;
             cv::imshow("Result of Detection", img);
             cv::waitKey(0);
