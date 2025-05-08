@@ -211,22 +211,9 @@ void DetectTest()
             samSegmentorEncoder->RunSession(img, resSam, modelTypeRef);
 
             // Make sure we have at least one result
-            // Calculate SAM scaling factors
-            float samScaleX = 1024.0f / img.cols;
-            float samScaleY = 1024.0f / img.rows;
-
-
 
             for (const auto& result : resYolo) {
-
-                // Scale YOLO boxes to SAM input dimensions
-                cv::Rect scaledBox;
-                // Apply scaling to convert from original image to SAM input space
-                scaledBox.x = int(result.box.x * samScaleX);
-                scaledBox.y = int(result.box.y * samScaleY);
-                scaledBox.width = int(result.box.width * samScaleX);
-                scaledBox.height = int(result.box.height * samScaleY);
-                resSam[0].boxes.push_back(scaledBox);
+                resSam[0].boxes.push_back(result.box);
             }
 
             modelTypeRef = params2.modelType;
