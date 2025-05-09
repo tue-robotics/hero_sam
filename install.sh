@@ -27,7 +27,7 @@ ONNX_DIRECTORY="$PWD/$ONNX_NAME"
 if [ ! -d "$SAM_DIRECTORY" ] ; then
     echo "$SAM_DIRECTORY does not exist."
     git clone git@github.com:utkutahan/hero_sam.git ./
-    git checkout feature/LocalImplementation
+    # git checkout feature/LocalImplementation
     git pull
 
 fi
