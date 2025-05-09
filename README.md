@@ -19,7 +19,7 @@
 | OpenCV                           | >=4.0.0       |
 | C++ Standard                     | >=17          |
 | Cmake                            | >=3.5         |
-| Cuda (Optional)                  | >=11.4 \<12.0 |
+| Cuda (Optional)                  | >=12.8        |
 | cuDNN (Cuda required)            | =9            |
 
 Note: The dependency on C++17 is due to the usage of the C++17 filesystem feature.
