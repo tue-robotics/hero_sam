@@ -1,6 +1,20 @@
 #!/bin/bash
 # This script installs the required packages for the project.
 
+# Set the installation directory
+INSTALL_DIR="$PWD/hero_sam"
+if [ ! -d "$INSTALL_DIR" ] ; then
+    echo "$INSTALL_DIR does not exist."
+    # Create a new directory for the project
+    mkdir -p "$INSTALL_DIR"
+    cd "$INSTALL_DIR"
+    echo "Installing to $INSTALL_DIR"
+else
+    echo "$INSTALL_DIR already exists."
+    cd "$INSTALL_DIR"
+fi
+
+
 # Define ONNX Runtime version and folder name
 ONNX_VERSION="1.21.1"
 ONNX_NAME="onnxruntime-linux-x64-gpu-${ONNX_VERSION}"
@@ -45,4 +59,4 @@ cd ../..
 cd pipeline && mkdir -p build && cd build
 cmake .. -DONNXRUNTIME_ROOT=$PWD/../../${ONNX_NAME} && make -j8
 
-./Yolov8OnnxRuntimeCPPInference
+./PipelineCPPInference
