@@ -178,7 +178,7 @@ void DetectTest()
 
     params1.rectConfidenceThreshold = 0.1;
     params1.iouThreshold = 0.5;
-    params1.modelPath = "/home/amigo/Documents/repos/hero_sam/sam_inference/model/SAM_encoder.onnx";
+    params1.modelPath = "SAM_encoder.onnx";
     params1.imgSize = { 1024, 1024 };
 
 
@@ -190,7 +190,7 @@ void DetectTest()
     samSegmentorEncoder->CreateSession(params1);
     params2 = params1;
     params2.modelType = SEG::SAM_SEGMENT_DECODER;
-    params2.modelPath = "/home/amigo/Documents/repos/hero_sam/sam_inference/model/SAM_mask_decoder.onnx";
+    params2.modelPath = "SAM_mask_decoder.onnx";
     samSegmentorDecoder->CreateSession(params2);
 
     std::filesystem::path current_path = std::filesystem::current_path();

@@ -54,7 +54,7 @@ if (WIN32)
 endif ()
 
 # Copy needed files to the same folder of the executable file
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../sam_inference/model/SAM_encoder.onnx ${CMAKE_CURRENT_BINARY_DIR}/SAM_mask_decoder.onnx  COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../sam_inference/model/SAM_mask_decoder.onnx ${CMAKE_CURRENT_BINARY_DIR}/SAM_mask_decoder.onnx  COPYONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../sam_inference/model/SAM_encoder.onnx ${CMAKE_CURRENT_BINARY_DIR}/SAM_encoder.onnx COPYONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../yolo_inference/data/coco.yaml ${CMAKE_CURRENT_BINARY_DIR}/coco.yaml COPYONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../yolo_inference/model/yolo11m.onnx ${CMAKE_CURRENT_BINARY_DIR}/yolo11m.onnx COPYONLY)
