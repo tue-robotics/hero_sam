@@ -9,7 +9,7 @@
 #include <filesystem>
 #include <fstream>
 #include <random>
-//#include <ros/ros.h>
+#include <ros/ros.h>
 
 
 // Forward declarations
@@ -20,6 +20,6 @@ void Detector(YOLO_V8*& p, std::vector<DL_RESULT>& res, const cv::Mat& img);
 void Classifier(YOLO_V8*& p, const cv::Mat& img);
 int ReadCocoYaml(YOLO_V8*& p);
 //void DetectTest(cv::Mat& img);
-void DetectTest(const cv::Mat& img);
+std::vector<cv::Mat> DetectTest(const cv::Mat& img);
 void ClsTest();
 void ClassificationInference(const cv::Mat& img);

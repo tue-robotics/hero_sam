@@ -37,9 +37,9 @@ void Detector(YOLO_V8*& p, std::vector<DL_RESULT>& res, const cv::Mat& img) {
 
             }
             std::cout << "Press any key to exit" << std::endl;
-            cv::imshow("Result of Detection", img);
-            cv::waitKey(0);
-            cv::destroyAllWindows();
+            //cv::imshow("Result of Detection", img);
+            //cv::waitKey(0);
+            //cv::destroyAllWindows();
 
 }
 
@@ -65,9 +65,9 @@ void Classifier(YOLO_V8*& p, const cv::Mat& img)
                 positionY += 50;
             }
 
-            cv::imshow("TEST_CLS", img);
-            cv::waitKey(0);
-            cv::destroyAllWindows();
+            //cv::imshow("TEST_CLS", img);
+            //cv::waitKey(0);
+            //cv::destroyAllWindows();
             //cv::imwrite("E:\\output\\" + std::to_string(k) + ".png", img);
         //}
 
@@ -78,7 +78,7 @@ void Classifier(YOLO_V8*& p, const cv::Mat& img)
 
 int ReadCocoYaml(YOLO_V8*& p) {
     // Open the YAML file
-    std::ifstream file("coco.yaml");
+    std::ifstream file(std::string(YOLO_MODELS_PATH) + "/../data/coco.yaml");
     if (!file.is_open())
     {
         std::cerr << "Failed to open file" << std::endl;
@@ -125,7 +125,7 @@ int ReadCocoYaml(YOLO_V8*& p) {
 }
 
 
-void DetectTest(const cv::Mat& img)
+std::vector<cv::Mat> DetectTest(const cv::Mat& img)
 {
 
     ////////////////////////// YOLO //////////////////////////////////////
@@ -134,7 +134,7 @@ void DetectTest(const cv::Mat& img)
     DL_INIT_PARAM params;
     params.rectConfidenceThreshold = 0.1;
     params.iouThreshold = 0.5;
-    params.modelPath = "yolo11m.onnx";
+    params.modelPath = std::string(YOLO_MODELS_PATH) + "/yolo11m.onnx";
     params.imgSize = { 640, 640 };
 #ifdef USE_CUDA
     params.cudaEnable = true;
@@ -160,7 +160,7 @@ void DetectTest(const cv::Mat& img)
     SEG::DL_INIT_PARAM params2;
 
     params1.rectConfidenceThreshold = 0.1;
-    params1.modelPath = "SAM_encoder.onnx";
+    params1.modelPath = std::string(SAM_MODELS_PATH) + "/SAM_encoder.onnx";
     params1.imgSize = { 1024, 1024 };
 
 
@@ -172,7 +172,7 @@ void DetectTest(const cv::Mat& img)
     samSegmentorEncoder->CreateSession(params1);
     params2 = params1;
     params2.modelType = SEG::SAM_SEGMENT_DECODER;
-    params2.modelPath = "SAM_mask_decoder.onnx";
+    params2.modelPath = std::string(SAM_MODELS_PATH) + "/SAM_mask_decoder.onnx";
     samSegmentorDecoder->CreateSession(params2);
 
 
@@ -197,10 +197,11 @@ void DetectTest(const cv::Mat& img)
             modelTypeRef = params2.modelType;
             samSegmentorDecoder->RunSession(img, resSam, modelTypeRef, res);
             std::cout << "Press any key to exit" << std::endl;
-            cv::imshow("Result of Detection", img);
-            cv::waitKey(0);
-            cv::destroyAllWindows();
-
+            //cv::imshow("Result of Detection", img);
+            //cv::waitKey(0);
+            //cv::destroyAllWindows();
+            //return res.masks;
+            return std::move(res.masks);
             }
 
 
