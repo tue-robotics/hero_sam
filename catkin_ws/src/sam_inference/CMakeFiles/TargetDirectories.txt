@@ -1,0 +1,3 @@
+/home/utku/Desktop/hero_sam/hero_sam/sam_inference/CMakeFiles/rebuild_cache.dir
+/home/utku/Desktop/hero_sam/hero_sam/sam_inference/CMakeFiles/edit_cache.dir
+/home/utku/Desktop/hero_sam/hero_sam/sam_inference/CMakeFiles/SAMOnnxRuntimeCPPInference.dir
