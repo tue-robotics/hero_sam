@@ -1,5 +1,5 @@
 #include "ros_segment_inference.h"
-void Detector(YOLO_V8*& p, std::vector<DL_RESULT>& res, const cv::Mat& img) {
+void Detector(std::unique_ptr<YOLO_V8>& p, std::vector<DL_RESULT>& res, const cv::Mat& img) {
 
 
             p->RunSession(img, res);
@@ -44,7 +44,7 @@ void Detector(YOLO_V8*& p, std::vector<DL_RESULT>& res, const cv::Mat& img) {
 }
 
 
-void Classifier(YOLO_V8*& p, const cv::Mat& img)
+void Classifier(std::unique_ptr<YOLO_V8>& p, const cv::Mat& img)
 {
 
     std::random_device rd;
@@ -76,7 +76,7 @@ void Classifier(YOLO_V8*& p, const cv::Mat& img)
 
 
 
-int ReadCocoYaml(YOLO_V8*& p) {
+int ReadCocoYaml(std::unique_ptr<YOLO_V8>& p) {
     // Open the YAML file
     std::ifstream file(std::string(YOLO_MODELS_PATH) + "/../data/coco.yaml");
     if (!file.is_open())
@@ -129,7 +129,7 @@ std::vector<cv::Mat> DetectTest(const cv::Mat& img)
 {
 
     ////////////////////////// YOLO //////////////////////////////////////
-    YOLO_V8* yoloDetector = new YOLO_V8;
+    std::unique_ptr<YOLO_V8> yoloDetector = std::make_unique<YOLO_V8>();
     ReadCocoYaml(yoloDetector);
     DL_INIT_PARAM params;
     params.rectConfidenceThreshold = 0.1;
@@ -154,8 +154,8 @@ std::vector<cv::Mat> DetectTest(const cv::Mat& img)
 
     yoloDetector->CreateSession(params);
     ////////////////////////// SAM //////////////////////////////////////
-    SAM* samSegmentorEncoder = new SAM;
-    SAM* samSegmentorDecoder = new SAM;
+    std::unique_ptr<SAM> samSegmentorEncoder = std::make_unique<SAM>();
+    std::unique_ptr<SAM> samSegmentorDecoder = std::make_unique<SAM>();
     SEG::DL_INIT_PARAM params1;
     SEG::DL_INIT_PARAM params2;
 
@@ -177,38 +177,38 @@ std::vector<cv::Mat> DetectTest(const cv::Mat& img)
 
 
     std::vector<SEG::DL_RESULT> resSam;
-            ////////////////////////// YOLO //////////////////////////////////////
-            std::vector<DL_RESULT> resYolo;
-            Detector(yoloDetector, resYolo, img);
+    ////////////////////////// YOLO //////////////////////////////////////
+    std::vector<DL_RESULT> resYolo;
+    Detector(yoloDetector, resYolo, img);
 
-            ////////////////////////// SAM //////////////////////////////////////
-            SEG::DL_RESULT res;
-            SEG::MODEL_TYPE modelTypeRef = params1.modelType;
+    ////////////////////////// SAM //////////////////////////////////////
+    SEG::DL_RESULT res;
+    SEG::MODEL_TYPE modelTypeRef = params1.modelType;
 
 
-            samSegmentorEncoder->RunSession(img, resSam, modelTypeRef, res);
+    samSegmentorEncoder->RunSession(img, resSam, modelTypeRef, res);
 
-            // Make sure we have at least one result
+    // Make sure we have at least one result
 
-            for (const auto& result : resYolo) {
-                res.boxes.push_back(result.box);
-            }
+    for (const auto& result : resYolo) {
+        res.boxes.push_back(result.box);
+    }
 
-            modelTypeRef = params2.modelType;
-            samSegmentorDecoder->RunSession(img, resSam, modelTypeRef, res);
-            std::cout << "Press any key to exit" << std::endl;
-            //cv::imshow("Result of Detection", img);
-            //cv::waitKey(0);
-            //cv::destroyAllWindows();
-            //return res.masks;
-            return std::move(res.masks);
-            }
+    modelTypeRef = params2.modelType;
+    samSegmentorDecoder->RunSession(img, resSam, modelTypeRef, res);
+    std::cout << "Press any key to exit" << std::endl;
+    //cv::imshow("Result of Detection", img);
+    //cv::waitKey(0);
+    //cv::destroyAllWindows();
+    //return res.masks;
+    return std::move(res.masks);
+    }
 
 
 
 void ClsTest()
 {
-    YOLO_V8* yoloDetector = new YOLO_V8;
+    std::unique_ptr<YOLO_V8> yoloDetector = std::make_unique<YOLO_V8>();
     std::string model_path = "cls.onnx";
     ReadCocoYaml(yoloDetector);
     DL_INIT_PARAM params{ model_path, YOLO_CLS, {224, 224} };
