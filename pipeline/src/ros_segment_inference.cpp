@@ -190,9 +190,27 @@ std::vector<cv::Mat> DetectTest(const cv::Mat& img)
 
     // Make sure we have at least one result
 
+    // for (const auto& result : resYolo) {
+    //     if (result.confidence < 0.5) {
+    //         std::cout << "Confidence is too low: " << result.confidence << std::endl;
+    //         std::cout << "Class ID is: " << yoloDetector->classes[result.classId] << std::endl;
+    //         continue;
+    //     }
+    //     std::cout << "Confidence is OKOK: " << result.confidence << std::endl;
+    //         std::cout << "Class ID is: " << yoloDetector->classes[result.classId] << std::endl;
+    //     res.boxes.push_back(result.box);
+    // }
     for (const auto& result : resYolo) {
+        if (result.classId == 60) {
+            std::cout << "Class ID is: " << yoloDetector->classes[result.classId] << " So we dont append"<< std::endl;
+            continue;
+        }
         res.boxes.push_back(result.box);
+        std::cout << "Confidence is OKOK: " << result.confidence << std::endl;
+        std::cout << "Class is: " << yoloDetector->classes[result.classId] << std::endl;
+        std::cout << "Class ID is: " << result.classId << std::endl;
     }
+
 
     modelTypeRef = params2.modelType;
     samSegmentorDecoder->RunSession(img, resSam, modelTypeRef, res);
